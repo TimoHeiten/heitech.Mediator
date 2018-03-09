@@ -6,7 +6,7 @@ Mediator Design pattern with two flavors:
 
 ## Use of simple Mediator:
 
-```
+```csharp
 using heitech.Mediator.Factory;
 using heitech.Mediator.Interface;
 
@@ -37,7 +37,7 @@ Exceptions during registration / resolving
 The complex Mediator uses a generic Key to let you decide how you want to reference it.
 First create a IMessenger that handles all ReceiveCommand, Receivequery etc. on incoming Message/RequestObjects
 Implement your own IMessageobject or derive from abstract baseclass MessageBase. (analog for RequestObject) 
-```
+```csharp
 class MyMessenger : IMessenger<string>
 {
     string Identifier{get;}
