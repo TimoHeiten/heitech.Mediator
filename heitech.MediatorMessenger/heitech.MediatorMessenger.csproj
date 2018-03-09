@@ -5,10 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interface\" />
+    <Folder Include="Implementation\Mediator\" />
+    <Folder Include="Implementation\Messenger\" />
+    <Folder Include="Implementation\Messages\" />
+    <Folder Include="Implementation\Registerer\" />
     <Folder Include="Mockings\" />
-    <Folder Include="Factory\" />
-    <Folder Include="Messages\" />
   </ItemGroup>
 
 </Project>
