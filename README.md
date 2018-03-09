@@ -56,7 +56,7 @@ class MyMessage : IMessageObject<string>
 ```
 
 Then instantiate the Mediator, register your messenger and create a MessageObject.
-```
+```csharp
 using heitech.MediatorMessenger.Factory;
 using heitech.MediatorMessenger.Interface;
 
