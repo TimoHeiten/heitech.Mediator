@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Implementation\Mediator\" />
     <Folder Include="Implementation\Messenger\" />
     <Folder Include="Implementation\Messages\" />
     <Folder Include="Mockings\" />

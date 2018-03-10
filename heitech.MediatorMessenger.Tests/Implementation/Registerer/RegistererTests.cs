@@ -18,6 +18,18 @@ namespace heitech.MediatorMessenger.Tests.Implementation.Registerer
             Assert.IsTrue(mediator.WasRegistererSet);
         }
 
+        [TestMethod]
+        public void MessengerRegisterer_GetThrowsExceptionIfMessengerNotRegistered()
+            => Assert.ThrowsException<MessengerIdentifierNotRegisteredException>(() => registerer.Get("Mock"));
+
+        [TestMethod]
+        public void MessengerRegisterer_GetReturnsMessengerForIdentifier()
+        {
+            RegisterMock();
+            IMessenger<string> mock = registerer.Get("Mock");
+
+            Assert.AreSame(mock, messenger);
+        }
 
         [TestMethod]
         public void MessengerRegisterer_RegisterMessengerRegistersExactMessengerWithKey()

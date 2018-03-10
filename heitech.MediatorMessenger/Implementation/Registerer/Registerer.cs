@@ -1,5 +1,6 @@
 ﻿using heitech.MediatorMessenger.Exceptions;
 using heitech.MediatorMessenger.Interface;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("heitech.MediatorMessenger.Tests")]
@@ -40,5 +41,14 @@ namespace heitech.MediatorMessenger.Implementation.Registerer
         public void Unregister(IMessenger<TKey> messenger) => Unregister(messenger.MessengerIdentifier);
 
         public bool IsRegistered(TKey key) => Messengers.ContainsKey(key);
+
+        public IMessenger<TKey> Get(TKey key)
+        {
+            if (Messengers.TryGetValue(key, out IMessenger<TKey> messenger))
+            {
+                return messenger;
+            }
+            else throw new MessengerIdentifierNotRegisteredException($"{key.ToString()} not registered");
+        }
     }
 }

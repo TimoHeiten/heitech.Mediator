@@ -10,5 +10,6 @@
         IMediatorMessenger<TKey> Mediator { get; }
 
         bool IsRegistered(TKey key);
+        IMessenger<TKey> Get(TKey key);
     }
 }

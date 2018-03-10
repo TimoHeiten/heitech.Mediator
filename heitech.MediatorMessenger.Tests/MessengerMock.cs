@@ -12,7 +12,11 @@ namespace heitech.MediatorMessenger.Tests
         internal bool ReceivedFunc { get; private set; }
         internal bool ReceivedFuncAsync { get; private set; }
 
-        public string MessengerIdentifier => "Mock";
+        private string ident;
+        public string MessengerIdentifier => ident;
+
+        internal MessengerMock() : this("Mock") { }
+        internal MessengerMock(string ident) => this.ident = ident;
 
         public IMessenger<string> Initialize()
         {

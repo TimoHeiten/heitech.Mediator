@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Folder Include="Factory\" />
-    <Folder Include="Implementation\Mediator\" />
     <Folder Include="Implementation\Messages\" />
     <Folder Include="Implementation\Messenger\" />
   </ItemGroup>
