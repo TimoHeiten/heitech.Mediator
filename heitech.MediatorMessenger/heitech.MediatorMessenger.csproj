@@ -8,7 +8,6 @@
     <Folder Include="Implementation\Mediator\" />
     <Folder Include="Implementation\Messenger\" />
     <Folder Include="Implementation\Messages\" />
-    <Folder Include="Implementation\Registerer\" />
     <Folder Include="Mockings\" />
   </ItemGroup>
 
