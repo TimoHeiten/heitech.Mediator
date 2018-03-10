@@ -18,4 +18,17 @@ namespace heitech.MediatorMessenger.Tests
         public bool Equals(IMessageObject<string> other) => other == this;
         public string ToString(string format, IFormatProvider formatProvider) => ToString();
     }
+
+    internal class RequestObjectMock : IRequestObject<string>
+    {
+        public RequestObjectMock(string sender, string receiver)
+        {
+            Sender = sender;
+            Receiver = receiver;
+        }
+
+        public string Sender { get;}
+        public string Receiver { get; }
+        public Type RequestedType { get; internal set; }
+    }
 }
