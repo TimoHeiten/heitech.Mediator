@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Mockings\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="heitech.LinqXt" Version="1.0.0" />
   </ItemGroup>
 

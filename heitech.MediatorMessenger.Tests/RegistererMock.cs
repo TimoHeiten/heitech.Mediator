@@ -12,7 +12,7 @@ namespace heitech.MediatorMessenger.Tests
 
         public bool IsRegistered(string key) => PredicateRegistered(key);
 
-        public IMediatorMessenger<string> Mediator => throw new NotImplementedException();
+        public IMediator<string> Mediator => throw new NotImplementedException();
         public void Register(IMessenger<string> messenger) => throw new NotImplementedException();
         public void Unregister(string adress) => throw new NotImplementedException();
         public void Unregister(IMessenger<string> messenger) => throw new NotImplementedException();

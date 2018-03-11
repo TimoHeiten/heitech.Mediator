@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Factory\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\heitech.MediatorMessenger\heitech.MediatorMessenger.csproj" />
   </ItemGroup>
 

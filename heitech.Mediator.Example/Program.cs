@@ -1,4 +1,6 @@
-﻿using heitech.Mediator.Interface;
+﻿using heitech.Mediator.Example.MessengerExample;
+using heitech.Mediator.Interface;
+using heitech.MediatorMessenger.Interface;
 using System;
 using System.Threading.Tasks;
 
@@ -10,7 +12,28 @@ namespace heitech.Mediator.Example
         {
             DemonstrateSimpleMediator();
 
+            Console.WriteLine("");
+            Console.WriteLine("now the complex one:");
             Console.ReadKey();
+            DemonstrateComplexMediator();
+            Console.ReadKey();
+        }
+
+        private static void DemonstrateComplexMediator()
+        {
+            var factory = new MediatorMessenger.Factory.MediatorMessengerFactory<string>();
+            IRegisterer<string> reg = factory.CreateNewMediator();
+            IMediator<string> mediator = reg.Mediator;
+
+            var messenger_A = new Messenger_A();
+            var messenger_B = new Messenger_B("this was sent from B to A", mediator);
+
+            reg.Register(messenger_A);
+            reg.Register(messenger_B);
+
+            // sends this to Messenger_B
+            // which in turn sends a command To messenger_a that handles it with writing to the console
+            mediator.Command(new MessageB());
         }
 
         private static void DemonstrateSimpleMediator()

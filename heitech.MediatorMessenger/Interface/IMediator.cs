@@ -2,7 +2,7 @@
 
 namespace heitech.MediatorMessenger.Interface
 {
-    public interface IMediatorMessenger<TKey>
+    public interface IMediator<TKey>
     {
         void Command(IMessageObject<TKey> message);
         Task CommandAsync(IMessageObject<TKey> message);

@@ -7,7 +7,7 @@
         void Unregister(TKey adress);
         void Unregister(IMessenger<TKey> messenger);
 
-        IMediatorMessenger<TKey> Mediator { get; }
+        IMediator<TKey> Mediator { get; }
 
         bool IsRegistered(TKey key);
         IMessenger<TKey> Get(TKey key);

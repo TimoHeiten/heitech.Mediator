@@ -9,7 +9,7 @@ namespace heitech.MediatorMessenger.Implementation.Registerer
 {
     internal class Registerer<TKey> : IRegisterer<TKey>
     {
-        public IMediatorMessenger<TKey> Mediator { get; }
+        public IMediator<TKey> Mediator { get; }
         protected Dictionary<TKey, IMessenger<TKey>> Messengers { get; }
             = new Dictionary<TKey, IMessenger<TKey>>();
 
