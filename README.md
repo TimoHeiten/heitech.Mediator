@@ -18,7 +18,7 @@ using heitech.Mediator.Interface;
 ...
   var factory = new MediatorFactory();
   IRegister register = factory.CreateNewMediator();
-  register.Register<IMyInterface>();
+  register.Register<IMyInterface>(new MyImplementation());
 
   IMediator mediator = register.Mediator;
 
@@ -45,31 +45,39 @@ Implement your own IMessageobject or derive from abstract baseclass MessageBase.
 ```csharp
 class MyMessenger : IMessenger<string>
 {
-    string Identifier{get;}
-    public void ReceiveCommand(IMessageObject<string> message)
-    {
-      message.IfInvoke<MyExpectedType>(x => x.ActionOnExpectedMessage());
-      ...
-    }
+    public string MessengerIdentifier => "anyName";
+    public void ReceiveCommand(IMessageObject<string> message)    
+      => message.IfInvoke<MyExpectedType>(x => x.ActionOnExpectedMessage());     
+}
+
+class MyMessenger2 : MessengerBase<string>
+{
+    public string MessengerIdentifier => "anyOtherName";
+    
+    protected override void InitializeMessages()
+      => AddMessage<MyMessage>(m => ConsoleWriteLine($"intercept message {m}"));
 }
 
 class MyMessage : IMessageObject<string>
 {
-  Type Sender {get;}
-  IEnumerable<TKey> Receiver {get;}
+  string Sender {get;}
+  IEnumerable<string> Receivers => new string[]{ "anyName", "anyOtherName"};
 }
 ```
 
-Then instantiate the Mediator, register your messenger and create a MessageObject.
+Then instantiate the Mediator, register your messenger(s), and send a MessageObject as arguement for mediator.Command.
 ```csharp
 using heitech.MediatorMessenger.Factory;
 using heitech.MediatorMessenger.Interface;
 
-var factory = new MediatorMessengerFactory();
-IMediatorMessenger<string> mediator = factory.Get<string>();
+var factory = new MediatorMessengerFactory<string>();
+IMediator<string> mediator = factory.CreateNewMediator();
 
 mediator.Register(new MyMessenger());
+mediator.Register(new MyMessenger2());
 mediator.Command(new MyMessageObject<string>());
 // same for Async, and Queries
+// both the MyMessenger, and MyMessenger2 ReceiveCommand methods are called, because they are listed as receivers.
+
 ```
-The benefit of the second approach is the flexibility that one gets with the possible interception at the Receiver level of the message. (see IMessenger<string> in example above). You could also derive the MessageObject and let them implement interceptable Behavior
+The benefit of the second approach is the flexibility that one gets with the possible interception at the Receiver level of the message. (see IMessenger<string> in example above, or the code of MessengerBase<string>). You could also derive the MessageObject and let them implement interceptable Behavior. The MessengerBase<T> is extremely flexible in its approach. You can override all its Receive_xx methods.
