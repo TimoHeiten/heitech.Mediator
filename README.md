@@ -17,7 +17,7 @@ using heitech.Mediator.Interface;
 
 ...
   var factory = new MediatorFactory();
-  IRegister register = fac.CreateNewMediator();
+  IRegister register = factory.CreateNewMediator();
   register.Register<IMyInterface>();
 
   IMediator mediator = register.Mediator;
@@ -25,8 +25,8 @@ using heitech.Mediator.Interface;
   mediator.Command<IMyInterface>(m_interface => m_interface.MyAction());
   mediator.CommandAsync<IMyInterface>(m_interface => m_interface.MyActionAsync()).Wait();
 
-  mediator.Query<IMyInterface, TResult>(m_interface => m_interface.MyFunc<TResult>());
-  mediator.QueryAsync<IMyInterface, Task<TResult>>(m_interface => m_interface.MyFuncAsync<TResult>());
+  TResult result = mediator.Query<IMyInterface, TResult>(m_interface => m_interface.MyFunc<TResult>());
+  result = mediator.QueryAsync<IMyInterface, Task<TResult>>(m_interface => m_interface.MyFuncAsync<TResult>()).Result();
 ...             
 
 ```
@@ -37,7 +37,7 @@ Exceptions during registration / resolving
 
 
 ## Use of complex Mediator:
-(implementation is todo, only scaffolding ready)
+(implementation of messageobjectBase, MessengerBase and Utils is todo, only scaffolding ready)
 
 The complex Mediator uses a generic Key to let you decide how you want to reference it.
 First create a IMessenger that handles all ReceiveCommand, Receivequery etc. on incoming Message/RequestObjects
@@ -72,4 +72,4 @@ mediator.Register(new MyMessenger());
 mediator.Command(new MyMessageObject<string>());
 // same for Async, and Queries
 ```
-The benefit of the second approach is the flexibility that one gets with the possible interception at the Receiver level of the message. In future releases, there will be a 
+The benefit of the second approach is the flexibility that one gets with the possible interception at the Receiver level of the message. (see IMessenger<string> in example above). You could also derive the MessageObject and let them implement interceptable Behavior
