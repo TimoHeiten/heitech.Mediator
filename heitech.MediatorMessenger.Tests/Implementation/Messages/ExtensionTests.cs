@@ -57,29 +57,29 @@ namespace heitech.MediatorMessenger.Tests.Implementation.Messages
         [TestMethod]
         public void MessageExtensions_RequstTryInvokeThrowsArgumentExceptionIfNotAssignable()
             => Assert.ThrowsException<ArgumentException>(() => request.TryInvokeRequest(typeof(string), () => 42, out int i));
+    }
 
-        private class NotThisRequest : IRequestObject<string>
+    internal class NotThisRequest : IRequestObject<string>
+    {
+        public string Sender => throw new NotImplementedException();
+        public string Receiver => throw new NotImplementedException();
+        public Type RequestedType => throw new NotImplementedException();
+    }
+
+    internal class NotThisTypeOfMessage : IMessageObject<string>
+    {
+        public string Sender => throw new NotImplementedException();
+
+        public IEnumerable<string> Receivers => throw new NotImplementedException();
+
+        public bool Equals(IMessageObject<string> other)
         {
-            public string Sender => throw new NotImplementedException();
-            public string Receiver => throw new NotImplementedException();
-            public Type RequestedType => throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        private class NotThisTypeOfMessage : IMessageObject<string>
+        public string ToString(string format, IFormatProvider formatProvider)
         {
-            public string Sender => throw new NotImplementedException();
-
-            public IEnumerable<string> Receivers => throw new NotImplementedException();
-
-            public bool Equals(IMessageObject<string> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public string ToString(string format, IFormatProvider formatProvider)
-            {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,68 +1,97 @@
 ﻿using heitech.MediatorMessenger.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace heitech.MediatorMessenger.Implementation.Messenger
 {
+    /// <summary>
+    /// Supplies all handling of messages/requests that are added in the Initialize method
+    /// </summary>
     public abstract class MessengerBase<TKey> : IMessenger<TKey>
     {
-        protected Dictionary<Type, Action<object>> commands = new Dictionary<Type, Action<object>>();
-        protected Dictionary<Type, Func<Task>> asyncCommands = new Dictionary<Type, Func<Task>>();
-
-        protected Dictionary<Type, object> queries = new Dictionary<Type, object>();
-        protected Dictionary<Type, object> asyncQueries = new Dictionary<Type, object>();
-
-        public TKey MessengerIdentifier { get; }
-        public MessengerBase(TKey key) => MessengerIdentifier = key;
-
-        public abstract IMessenger<TKey> Initialize();
-
-        protected IMessenger<TKey> AddCommand(Type msgKey, Action<object> action)
-        {
-            commands.Add(msgKey, action);
-            return this;
-        }
-
-        protected IMessenger<TKey> AddAsyncCommand(Type msgKey, Func<Task> func)
-        {
-            asyncCommands.Add(msgKey, func);
-            return this;
-        }
-
+        public abstract TKey MessengerIdentifier { get; }
         /// <summary>
-        /// Add a Func with your expected return type
-        /// make sure it matches exactly else a CastException is to be expected.
+        /// Initialize/Register all expected Messages/Requests.
+        /// called from ctor
         /// </summary>
-        protected IMessenger<TKey> AddQuery(Type msgKey, object func)
+        protected abstract void InitializeMessages();
+
+        protected MessengerBase(bool initializeMessages = true)
         {
-            queries.Add(msgKey, func);
+            if (initializeMessages)
+                InitializeMessages();
+        }
+
+        private readonly Dictionary<Type, IMessage> messages = new Dictionary<Type, IMessage>();
+        private readonly Dictionary<RequestResultContainer, IRequest> requests = new Dictionary<RequestResultContainer, IRequest>();
+
+        public virtual void ReceiveCommand(IMessageObject<TKey> message)
+            =>  messages[message.GetType()].Invoke(message);
+
+        public virtual TResult ReceiveQuery<TResult>(IRequestObject<TKey> request)
+        {
+            RequestResultContainer _iRequest = requests.Keys.FirstOrDefault(x => x.HasRequestedTypeAndExpectedResult(request.GetType(), typeof(TResult)));
+            if (_iRequest == null)
+                throw new KeyNotFoundException();
+
+            return (TResult)requests[_iRequest].InvokeRequest(request);
+        }
+
+        public MessengerBase<TKey> AddMessage<TMessageObject>(Action<TMessageObject> action)
+            where TMessageObject : class, IMessageObject<TKey>
+        {
+            var message = new MessageWrapper<TMessageObject>();
+            messages.Add(typeof(TMessageObject), message.Init(action));
             return this;
         }
 
-        // todo register FuncFinderInvoker like object.
-
-        /// <summary>
-        /// Add a Func with your expected return type from Task
-        /// make sure it matches exactly else a CastException is to be expected.
-        /// </summary>
-        protected IMessenger<TKey> AddAsyncQuery(Type msgKey, object funcTask)
+        public MessengerBase<TKey> AddRequest<TRequestObject, TResult>(Func<TRequestObject, TResult> func)
+            where TRequestObject : class, IRequestObject<TKey>
         {
-            asyncQueries.Add(msgKey, funcTask);
+            var container = new RequestResultContainer(typeof(TRequestObject), typeof(TResult));
+            var request = new RequestWrapper<TKey, TRequestObject, TResult>();
+            requests.Add(container, request.Init(func));
+
             return this;
         }
 
-        public void ReceiveCommand(IMessageObject<TKey> message)
-            => commands[message.GetType()](message);
+        // ------------------------------------------------------------------------------------------------------
+        // async part
+        // ------------------------------------------------------------------------------------------------------
+        private readonly Dictionary<Type, IMessage> asyncMessages = new Dictionary<Type, IMessage>();
+        private readonly Dictionary<RequestResultContainer, IRequest> asyncRequests = new Dictionary<RequestResultContainer, IRequest>();
+
+        public MessengerBase<TKey> AddMessage<TMessageObject>(Func<TMessageObject, Task> action)
+           where TMessageObject : class, IMessageObject<TKey>
+        {
+            var message = new MessageWrapper<TMessageObject>();
+            messages.Add(typeof(TMessageObject), message.InitAsync(action));
+            return this;
+        }
+
+        public MessengerBase<TKey> AddRequest<TRequestObject, TResult>(Func<TRequestObject, Task<TResult>> func)
+           where TRequestObject : class, IRequestObject<TKey>
+        {
+            var container = new RequestResultContainer(typeof(TRequestObject), typeof(TResult));
+            var request = new RequestWrapper<TKey, TRequestObject, TResult>();
+            asyncRequests.Add(container, request.InitAsync(func));
+
+            return this;
+        }
 
         public Task ReceiveCommandAsync(IMessageObject<TKey> message)
-            => asyncCommands[message.GetType()]();
+             => asyncMessages[message.GetType()].InvokeAsync(message);
 
-        public object ReceiveQuery(IRequestObject<TKey> request)
-            => new object();
-        // does not work=> queries[request.GetType()]();
+        public async Task<TResult> ReceiveQueryAsync<TResult>(IRequestObject<TKey> request)
+        {
+            var _iRequest = requests.Keys.FirstOrDefault(x => x.HasRequestedTypeAndExpectedResult(request.GetType(), typeof(TResult)));
+            if (_iRequest == null)
+                throw new KeyNotFoundException();
 
-        public Task<object> ReceiveQueryAsync(IRequestObject<TKey> request)
-            => Task.FromResult(new object());
+            object o = await asyncRequests[_iRequest].InvokeRequestAsync(request);
+            return (TResult)o;
+        }
     }
 }

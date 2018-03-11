@@ -1,5 +1,4 @@
 ﻿using heitech.LinqXt.Enumerables;
-using heitech.MediatorMessenger.Exceptions;
 using heitech.MediatorMessenger.Interface;
 using System;
 using System.Collections.Generic;
@@ -39,35 +38,14 @@ namespace heitech.MediatorMessenger.Implementation.Mediator
         {
             CheckNull(request);
             IMessenger<TKey> messenger = GetMessenger(request.Receiver);
-            object response = messenger.ReceiveQuery(request);
-            CheckCorrectType<TResponse>(response);
-
-            return (TResponse)response;
+            return messenger.ReceiveQuery<TResponse>(request);
         }
 
-        public async Task<TResponse> QueryAsync<TResponse>(IRequestObject<TKey> request)
+        public Task<TResponse> QueryAsync<TResponse>(IRequestObject<TKey> request)
         {
             CheckNull(request);
             IMessenger<TKey> messenger = GetMessenger(request.Receiver);
-            object response = await messenger.ReceiveQueryAsync(request);
-            CheckCorrectType<TResponse>(response);
-
-            return (TResponse)response;
-        }
-
-        private void CheckCorrectType<TResponse>(object messengerResponse)
-        {
-            if (messengerResponse == null)
-                throw new ArgumentException("response must not be null. Use heitech.Implementation.Messages.NullableResponse<T> for this purpose");
-
-            Type result = messengerResponse.GetType();
-            Type expected = typeof(TResponse);
-
-            if (!AreTypesRelated(result, expected))
-            {
-                throw new UnexpectedResponseTypeException($"Response of type {expected.Name} was expected." +
-                    $"Yet a response of type {result.Name} was given");
-            }
+            return messenger.ReceiveQueryAsync<TResponse>(request);
         }
 
         private bool AreTypesRelated(Type expected, Type other)

@@ -6,11 +6,9 @@ namespace heitech.MediatorMessenger.Interface
     {
         TKey MessengerIdentifier { get; }
         void ReceiveCommand(IMessageObject<TKey> message);
-        object ReceiveQuery(IRequestObject<TKey> request);
+        TResult ReceiveQuery<TResult>(IRequestObject<TKey> request);
 
         Task ReceiveCommandAsync(IMessageObject<TKey> message);
-        Task<object> ReceiveQueryAsync(IRequestObject<TKey> request);
-
-        IMessenger<TKey> Initialize();
+        Task<TResult> ReceiveQueryAsync<TResult>(IRequestObject<TKey> request);
     }
 }

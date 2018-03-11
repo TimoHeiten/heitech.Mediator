@@ -40,16 +40,16 @@ namespace heitech.MediatorMessenger.Tests
 
         internal object Result;
 
-        public object ReceiveQuery(IRequestObject<string> request)
+        public TResult ReceiveQuery<TResult>(IRequestObject<string> request)
         {
             ReceivedFunc = true;
-            return Result;
+            return (TResult)Result;
         }
 
-        public Task<object> ReceiveQueryAsync(IRequestObject<string> request)
+        public Task<T> ReceiveQueryAsync<T>(IRequestObject<string> request)
         {
             ReceivedFuncAsync = true;
-            return Task.FromResult(Result);
+            return Task.FromResult((T)Result);
         }
     }
 }

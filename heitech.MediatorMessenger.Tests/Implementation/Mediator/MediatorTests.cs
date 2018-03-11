@@ -81,20 +81,6 @@ namespace heitech.MediatorMessenger.Tests.Implementation.Mediator
         }
 
         [TestMethod]
-        public void MediatorMessenger_QueryThrowsUnexpectedTypeException_IfResponseTypeDoesNotMatchExpectedType()
-        {
-            messenger_1.Result = 42;
-            Assert.ThrowsException<UnexpectedResponseTypeException>(() => mediator.Query<string>(request));
-        }
-
-        [TestMethod]
-        public void MediatorMessenger_QueryReturnsNullThrowsArgumentException()
-        {
-            messenger_1.Result = null;
-            Assert.ThrowsException<ArgumentException>(() => mediator.Query<string>(request));
-        }
-
-        [TestMethod]
         public void MediatorMessenger_ExpectedResultWorksDownCastAndUpcast()
         {
             messenger_1.Result = new NextExpected();
@@ -125,20 +111,6 @@ namespace heitech.MediatorMessenger.Tests.Implementation.Mediator
         }
 
         [TestMethod]
-        public async Task MediatorMessenger_QueryAsyncThrowsUnexpectedTypeExceptionOnNotMatchingReturnType()
-        {
-            messenger_1.Result = 42;
-            await Assert.ThrowsExceptionAsync<UnexpectedResponseTypeException>(() => mediator.QueryAsync<string>(request));
-        }
-
-        [TestMethod]
-        public async Task MediatorMessenger_QueryAsyncResponseIsNullThrowsArgumentException()
-        {
-            messenger_1.Result = null;
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => mediator.QueryAsync<string>(request));
-        }
-
-        [TestMethod]
         public async Task MediatorMessenger_QueryAsyncDownAndUpcastWork()
         {
             messenger_1.Result = new NextExpected();
@@ -148,7 +120,6 @@ namespace heitech.MediatorMessenger.Tests.Implementation.Mediator
             Assert.IsTrue(messenger_1.ReceivedFuncAsync);
             Assert.IsFalse(messenger_2.ReceivedFuncAsync);
         }
-
 
         [TestMethod]
         public async Task AllMediatorInvocablesThrowArgumentExceptionOnNullArgument()
