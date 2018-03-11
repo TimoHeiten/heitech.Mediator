@@ -14,8 +14,4 @@
     <ProjectReference Include="..\heitech.Mediator\heitech.Mediator.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mokcings\" />
-  </ItemGroup>
-
 </Project>

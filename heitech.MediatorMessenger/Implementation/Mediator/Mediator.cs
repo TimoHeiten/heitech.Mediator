@@ -1,4 +1,5 @@
-﻿using heitech.MediatorMessenger.Exceptions;
+﻿using heitech.LinqXt.Enumerables;
+using heitech.MediatorMessenger.Exceptions;
 using heitech.MediatorMessenger.Interface;
 using System;
 using System.Collections.Generic;
@@ -78,14 +79,5 @@ namespace heitech.MediatorMessenger.Implementation.Mediator
 
         private object CheckNull(object obj)
             => obj ?? throw new ArgumentException($"Message/Requestobject must not be null");
-    }
-
-    // todo use heitech.Linq_Xt
-    internal static class LinqExt
-    {
-        internal static void ForAll<TSource>(this IEnumerable<TSource> source, Action<TSource> action)
-        {
-            foreach (TSource item in source) action(item);
-        }
     }
 }

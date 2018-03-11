@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>TimoHeiten</Authors>
+    <Description>Register/Resolve method calls on interfaces at runtime</Description>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/TimoHeiten/heitech.Mediator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TimoHeiten/heitech.Mediator</RepositoryUrl>
+    <PackageTags>Pattern Mediator heitech</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Mockings\" />
-  </ItemGroup>
 
 </Project>

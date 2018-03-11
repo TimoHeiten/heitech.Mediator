@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "heitech.MediatorMessenger",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "heitech.Mediator.Tests.Core", "heitech.Mediator.Tests.Core\heitech.Mediator.Tests.Core.csproj", "{C3890269-8924-4803-8371-186E42E4198A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "heitech.MediatorMessenger.Tests", "heitech.MediatorMessenger.Tests\heitech.MediatorMessenger.Tests.csproj", "{B4C6360A-DD73-4B0F-8DAF-54221D64ECF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "heitech.MediatorMessenger.Tests", "heitech.MediatorMessenger.Tests\heitech.MediatorMessenger.Tests.csproj", "{B4C6360A-DD73-4B0F-8DAF-54221D64ECF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "heitech.Mediator.Example", "heitech.Mediator.Example\heitech.Mediator.Example.csproj", "{A8A6B67F-2870-45A9-AABF-EE09F6201D1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{B4C6360A-DD73-4B0F-8DAF-54221D64ECF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4C6360A-DD73-4B0F-8DAF-54221D64ECF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4C6360A-DD73-4B0F-8DAF-54221D64ECF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8A6B67F-2870-45A9-AABF-EE09F6201D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8A6B67F-2870-45A9-AABF-EE09F6201D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8A6B67F-2870-45A9-AABF-EE09F6201D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8A6B67F-2870-45A9-AABF-EE09F6201D1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

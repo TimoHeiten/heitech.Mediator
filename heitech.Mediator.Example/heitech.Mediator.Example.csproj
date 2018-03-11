@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\heitech.MediatorMessenger\heitech.MediatorMessenger.csproj" />
+    <ProjectReference Include="..\heitech.Mediator\heitech.Mediator.csproj" />
+  </ItemGroup>
+
+</Project>

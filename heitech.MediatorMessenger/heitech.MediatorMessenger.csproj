@@ -5,9 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Implementation\Messenger\" />
-    <Folder Include="Implementation\Messages\" />
     <Folder Include="Mockings\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="heitech.LinqXt" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
