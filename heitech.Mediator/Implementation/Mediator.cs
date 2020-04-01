@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace heitech.Mediator.Implementation
 {
+    ///<summary>
+    /// Mediator implementation to handle commands and queries. Make Interfaces widely available as a sort of Facade
+    ///</summary>
     internal class Mediator : IInternalMediator
     {
         private IRegister register;

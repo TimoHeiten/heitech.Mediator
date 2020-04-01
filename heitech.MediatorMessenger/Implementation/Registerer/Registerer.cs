@@ -38,9 +38,15 @@ namespace heitech.MediatorMessenger.Implementation.Registerer
             else throw new MessengerIdentifierNotRegisteredException($"{address.ToString()} not registered");
         }
 
-        public void Unregister(IMessenger<TKey> messenger) => Unregister(messenger.MessengerIdentifier);
+        public void Unregister(IMessenger<TKey> messenger)
+        {
+            Unregister(messenger.MessengerIdentifier);
+        }
 
-        public bool IsRegistered(TKey key) => Messengers.ContainsKey(key);
+        public bool IsRegistered(TKey key) 
+        {
+            return Messengers.ContainsKey(key);
+        }
 
         public IMessenger<TKey> Get(TKey key)
         {
@@ -48,7 +54,10 @@ namespace heitech.MediatorMessenger.Implementation.Registerer
             {
                 return messenger;
             }
-            else throw new MessengerIdentifierNotRegisteredException($"{key.ToString()} not registered");
+            else 
+            {
+                throw new MessengerIdentifierNotRegisteredException($"{key.ToString()} not registered");
+            }
         }
     }
 }

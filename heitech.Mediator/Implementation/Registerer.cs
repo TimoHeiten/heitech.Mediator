@@ -5,10 +5,16 @@ using System.Collections.Generic;
 
 namespace heitech.Mediator.Implementation
 {
+    ///<summary>
+    /// Implementation of the IRegister
+    ///</summary>
     internal class Registerer : IRegister
     {
         protected Dictionary<Type, object> Mediatables { get; } = new Dictionary<Type, object>();
 
+        ///<summary>
+        ///associated Mediator implementation
+        ///</summary>
         public IMediator Mediator { get; }
         internal Registerer(IInternalMediator mediatorInstance)
         {
@@ -16,7 +22,11 @@ namespace heitech.Mediator.Implementation
             mediatorInstance.SetRegister(this);
         }
 
-        public bool IsRegistered<T>() where T : class => Mediatables.ContainsKey(typeof(T));
+        public bool IsRegistered<T>() 
+            where T : class
+        {
+            return Mediatables.ContainsKey(typeof(T));
+        }
 
         public void Register<T>(T mediatable)
             where T : class
@@ -24,15 +34,13 @@ namespace heitech.Mediator.Implementation
             Type type = typeof(T);
             DoInterfaceAssertion(type);
             if (!Mediatables.ContainsKey(type))
+            {
                 Mediatables.Add(type, mediatable);
+            }
             else
+            {
                 throw new TypeAlreadyRegisteredException($"{type.Name} is already registered with Mediator");
-        }
-
-        private void DoCheckKey(Type type)
-        {
-            if (Mediatables.ContainsKey(type))
-                throw new TypeAlreadyRegisteredException($"{type.Name} is already registered with Mediator");
+            }
         }
 
         private void DoInterfaceAssertion(Type t)
@@ -46,15 +54,21 @@ namespace heitech.Mediator.Implementation
         {
             Type type = typeof(T);
             if (Mediatables.ContainsKey(type))
+            {
                 Mediatables.Remove(type);
+            }
             else
+            {
                 ThrowTypeNotRegistered(type);
+            }
         }
 
         public T Get<T>()
         {
             if (Mediatables.TryGetValue(typeof(T), out object obj))
+            {
                 return (T)obj;
+            }
             else
             {
                 ThrowTypeNotRegistered(typeof(T));

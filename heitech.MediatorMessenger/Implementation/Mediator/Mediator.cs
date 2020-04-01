@@ -6,26 +6,42 @@ using System.Threading.Tasks;
 
 namespace heitech.MediatorMessenger.Implementation.Mediator
 {
+    ///<summary>
+    /// Implementation of the Messenger reliant Mediator
+    ///</summary>
     internal class Mediator<TKey> : IInternalMediatorMessenger<TKey>
     {
         private IRegisterer<TKey> registerer;
 
+        ///<summary>
+        /// Execute a Command on this messageObject for all registered receivers in the message
+        ///</summary>
         public void Command(IMessageObject<TKey> message)
         {
             CheckNull(message);
             ForAllReceivers(message.Receivers).ForAll(x => x.ReceiveCommand(message));
         }
 
+        ///<summary>
+        /// Execute a Command Async on this message object for all registered receivers.
+        ///</summary>
         public async Task CommandAsync(IMessageObject<TKey> message)
         {
             CheckNull(message);
             var tasks = new List<Task>();
-            ForAllReceivers(message.Receivers).ForAll(x => tasks.Add(x.ReceiveCommandAsync(message)));
+            ForAllReceivers(message.Receivers)
+                .ForAll
+                (
+                    x => tasks.Add(x.ReceiveCommandAsync(message))
+                );
 
             await Task.WhenAll(tasks);
         }
 
-        private IMessenger<TKey> GetMessenger(TKey key) => registerer.Get(key);
+        private IMessenger<TKey> GetMessenger(TKey key)
+        {
+            return registerer.Get(key);
+        }
 
         private IEnumerable<IMessenger<TKey>> ForAllReceivers(IEnumerable<TKey> receivers)
         {
@@ -33,7 +49,9 @@ namespace heitech.MediatorMessenger.Implementation.Mediator
                 yield return GetMessenger(identifier);
         }
 
-
+        ///<summary>
+        /// Exeucte a Query on the mediator for the requestobject and 
+        ///</summary>
         public TResponse Query<TResponse>(IRequestObject<TKey> request)
         {
             CheckNull(request);
