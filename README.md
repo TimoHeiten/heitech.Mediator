@@ -9,6 +9,19 @@ With either of these implementations you encapsualte the method calls/object int
 
 The best part is you can decouple two or more assemblies and make them only dependent on the assembly that uses the Mediator (and in case of the complex one implements all messages/interceptors)
 
+A good use is if you have an asp.net web API and use the controllers only as delegates to some form of use cases. You can utilize the complex Mediator and create simple Message Objects in the controller and invoke them by calling 
+```csharp
+public ActionResult Post(Model model)
+{
+    var messageResult = await mediator.CommandAsync(new UseCaseMessage(model));
+    return messageResult.Success
+           ? Ok(model)
+           : BadRequest(model);
+}
+```
+The added benefit is that you only need to change Messageobjects receiver if you want to add more functionality and maybe adjust the Messenger Registration.
+This decouples your Controllers from your implementations and use cases.
+
 ## Use of simple Mediator:
 
 ```csharp
