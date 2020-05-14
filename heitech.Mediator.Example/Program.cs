@@ -1,8 +1,5 @@
-﻿using heitech.Mediator.Example.MessengerExample;
-using heitech.Mediator.Interface;
-using heitech.MediatorMessenger.Interface;
-using System;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace heitech.Mediator.Example
 {
@@ -10,69 +7,40 @@ namespace heitech.Mediator.Example
     {
         static void Main(string[] args)
         {
-            DemonstrateSimpleMediator();
+            // mediator demonstration
+            // see TestOutlet.cs for Outlet Implementation
+            // outlets are automatically registered.
 
-            Console.WriteLine("");
-            Console.WriteLine("now the complex one:");
-            Console.ReadKey();
-            DemonstrateComplexMediator();
-            Console.ReadKey();
-        }
+            // create service collection
+            var services = new ServiceCollection();
+            services.AddMediator();
 
-        private static void DemonstrateComplexMediator()
-        {
-            var factory = new MediatorMessenger.Factory.MediatorMessengerFactory<string>();
-            IRegisterer<string> reg = factory.CreateNewMediator();
-            IMediator<string> mediator = reg.Mediator;
-
-            var messenger_A = new Messenger_A();
-            var messenger_B = new Messenger_B("this was sent from B to A", mediator);
-
-            reg.Register(messenger_A);
-            reg.Register(messenger_B);
-
-            // sends this to Messenger_B
-            // which in turn sends a command To messenger_a that handles it with writing to the console
-            mediator.Command(new MessageB());
-        }
-
-        private static void DemonstrateSimpleMediator()
-        {
-            var register = new Mediator.Factory.MediatorFactory().CreateNewMediator();
-            register.Register<IAmATestInterface>(new AmATestClass());
-            IMediator mediator = register.Mediator;
-
-            mediator.Command<IAmATestInterface>(m => m.Action());
-            mediator.CommandAsync<IAmATestInterface>(m => m.ActionAsync()).Wait();
-
-            Console.WriteLine(mediator.Query<IAmATestInterface, string>(m => m.Result()));
-        }
-
-        private interface IAmATestInterface
-        {
-            void Action();
-            Task ActionAsync();
-
-            string Result();
-            Task<string> TaskResult();
-        }
-
-        private class AmATestClass : IAmATestInterface
-        {
-            public AmATestClass()
-            { }
-
-            public void Action()
-                => Console.WriteLine("called via Command from mediator");
-
-            public Task ActionAsync()
+            // call all in service scope
+            using (var scope = services.BuildServiceProvider().CreateScope())
             {
-                Console.WriteLine("CommandAsync from mediator");
-                return Task.CompletedTask;
-            }
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-            public string Result() => "Result from " + GetType().Name;
-            public Task<string> TaskResult() => Task.FromResult("Async Result from " + GetType().Name);
+                // calls simple outlet
+                var opResult = mediator.ExecuteOutletAsync("test").Result; 
+                System.Console.WriteLine(opResult.IsSuccess);
+                var first = opResult.Result;
+                System.Console.WriteLine(first);
+
+                // calls typed outlet with untyped OperationResult
+                var outletType = new OutletType { Message = "typed outlet" };
+                opResult = mediator.ExecuteOutletAsync<OutletType>(outletType).Result;
+                System.Console.WriteLine(opResult.IsSuccess);
+                System.Console.WriteLine(opResult.Result);
+
+                // // calls typed outlet with untyped OperationResult
+                outletType = new OutletType { Message = "typed outlet" };
+                var opResult2 = mediator.ExecuteOutletAsync<OutletType, OutletResult>(outletType).Result;
+                System.Console.WriteLine(opResult2.IsSuccess);
+                // // typed result
+                System.Console.WriteLine(opResult2.Value.GetType());
+                System.Console.WriteLine(opResult2.Value);
+            }
         }
+
     }
 }
