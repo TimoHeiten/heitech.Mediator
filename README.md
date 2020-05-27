@@ -2,11 +2,12 @@
 
 Mediator Design pattern that allows for automatic discovery
 - Just add an IOutlet, IOutlet<T> or IOutlet<T, R> or all of them to a Handler Type.
-- The Resulting interface Implementations are called on the Medi
+- Use the IServiceCollection to add the components with the services.AddMediator() call
+- see below code for inspiration or see the heitech.Mediator.Example app for more details
 
 
 ## Why would you want this?
-With either of these implementations you encapsualte the method calls/object interactions of multiple registered items. The simple one helps with prototyping or small projects, and the complex one lets you intercept object interactions in different and powerful ways.
+With either of these implementations you encapsualte the method calls/object interactions of multiple registered items. The 
 
 The best part is you can decouple two or more assemblies and make them only dependent on the assembly that uses the Mediator (and in case of the complex one implements all messages/interceptors)
 
@@ -26,31 +27,91 @@ This decouples your Controllers from your implementations and use cases.
 ## Use of simple Mediator:
 
 ```csharp
-using heitech.Mediator.Factory;
-using heitech.Mediator.Interface;
+// define an outlet with one, two or all three interfaces
+// can be as many as you like it to be, just implement a different handler method for each one and make sure the types do not // overlap on a single class
 
-...
-  var factory = new MediatorFactory();
-  IRegister register = factory.CreateNewMediator();
-  register.Register<IMyInterface>(new MyImplementation());
+public class TestOutlet : IOutlet, 
+                          IOutlet<OutletType>,
+                          IOutlet<OutletType, OutletResult>
+{
+    public async Task<OperationResult> ExecuteCommandAsync()
+    {
+        await Task.Delay(10);
 
-  IMediator mediator = register.Mediator;
+        return OperationResult.Success(new { Message = "Outlet one is working fine "});
+    }
 
-  mediator.Command<IMyInterface>(m_interface => m_interface.MyAction());
-  mediator.CommandAsync<IMyInterface>(m_interface => m_interface.MyActionAsync()).Wait();
+    public Task<OperationResult> ExecuteOperationAsync(OutletType obj)
+    {
+        System.Console.WriteLine("Outlet with type also works");
+        return Task.FromResult<OperationResult>(OperationResult.Success(obj));
+    }
 
-  TResult result = mediator.Query<IMyInterface, TResult>(m_interface => m_interface.MyFunc<TResult>());
-  result = mediator.QueryAsync<IMyInterface, Task<TResult>>(m_interface => m_interface.MyFuncAsync<TResult>()).Result();
-...             
+    public Task<OperationResult<OutletResult>> ExecuteFunctionAsync(OutletType obj)
+    {
+        System.Console.WriteLine("calling typed operationresult");
+        return Task.FromResult
+        (
+            OperationResult<OutletResult>.Success
+            (
+                new OutletResult 
+                {
+                     ResultMessage = "result from typed operationresult"
+                }
+            )
+        );
+
+    }
+    string IOutlet.OutletKey => "test";
+}
+
+// add it via AddMediator, it will automatically resolve all IOutlet versions
+// then get hold of a service provider and 
+class Program
+{
+    static void Main(string[] args)
+    {
+        // mediator demonstration
+        // see TestOutlet.cs for Outlet Implementation
+        // outlets are automatically registered.
+
+        // create service collection
+        var services = new ServiceCollection();
+        services.AddMediator();
+
+        // call all in service scope
+        using (var scope = services.BuildServiceProvider().CreateScope())
+        {
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+            // calls simple outlet
+            var opResult = mediator.ExecuteOutletAsync("test").Result; 
+            System.Console.WriteLine(opResult.IsSuccess);
+            var first = opResult.Result;
+            System.Console.WriteLine(first);
+
+            // calls typed outlet with untyped OperationResult
+            var outletType = new OutletType { Message = "typed outlet" };
+            opResult = mediator.ExecuteOutletAsync<OutletType>(outletType).Result;
+            System.Console.WriteLine(opResult.IsSuccess);
+            System.Console.WriteLine(opResult.Result);
+
+            // // calls typed outlet with untyped OperationResult
+            outletType = new OutletType { Message = "typed outlet" };
+            var opResult2 = mediator.ExecuteOutletAsync<OutletType, OutletResult>(outletType).Result;
+            System.Console.WriteLine(opResult2.IsSuccess);
+            // // typed result
+            System.Console.WriteLine(opResult2.Value.GetType());
+            System.Console.WriteLine(opResult2.Value);
+        }
+    }
+
+    }
 
 ```
-Exceptions during registration / resolving 
-- TypeAlreadyRegisteredException 
-- TypeNotRegisteredException
-- ArgumentException
 
-
-## Use of complex Mediator:
+// beware, not fully developed as of today
+## Use of complex Mediator: (not included in Nuget package)
 (implementation of messageobjectBase, MessengerBase and Utils is todo, only scaffolding ready)
 
 The complex Mediator uses a generic Key to let you decide how you want to reference it.
