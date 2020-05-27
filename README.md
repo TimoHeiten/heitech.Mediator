@@ -1,8 +1,9 @@
 # heitech.Mediator
 
-Mediator Design pattern with two flavors:
-- A simple one which allows to call interface methods of registered interfaces.
-- A complex one that deals with Messageobjects that each registered Type can intercept and use in its on right. Registered Types need to implement the IMessenger interface.
+Mediator Design pattern that allows for automatic discovery
+- Just add an IOutlet, IOutlet<T> or IOutlet<T, R> or all of them to a Handler Type.
+- The Resulting interface Implementations are called on the Medi
+
 
 ## Why would you want this?
 With either of these implementations you encapsualte the method calls/object interactions of multiple registered items. The simple one helps with prototyping or small projects, and the complex one lets you intercept object interactions in different and powerful ways.
