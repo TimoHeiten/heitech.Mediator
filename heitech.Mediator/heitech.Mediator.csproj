@@ -3,7 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>TimoHeiten</Authors>
-    <Description>Register/Resolve method calls on interfaces at runtime</Description>
+    <Version>2.0.0</Version>
+    <Description>Mediator pattern with so called Outlets as sinks</Description>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/TimoHeiten/heitech.Mediator</PackageProjectUrl>
     <RepositoryUrl>https://github.com/TimoHeiten/heitech.Mediator</RepositoryUrl>
